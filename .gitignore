@@ -216,3 +216,19 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project data - never commit raw or processed data
+data/*
+!data/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+
+# Local environment
+.env
+.env.local
+
+# Notebook checkpoints (Jupyter clutter)
+.ipynb_checkpoints/
+
+# PyCharm
+.idea/
