@@ -1,4 +1,5 @@
 # swlegion-meta
+![CI](https://github.com/JustinHiltabidel/swlegion-meta/actions/workflows/ci.yml/badge.svg)
 
 Data-driven tools and analysis for the competitive Star Wars: Legion community.
 
