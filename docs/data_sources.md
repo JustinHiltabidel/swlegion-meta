@@ -15,17 +15,19 @@
 ### 1. Longshanks (legion.longshanks.org)
 **Volume: 5 · Legality: 2 · Effort: 3 · Reliability: 4**
 
-**What it is:** The de facto tournament management platform for competitive Legion. Every rated singles event, every registration, every list submission, every game result lives here.
+**What it is:** The de facto tournament management platform for competitive Legion. Every rated singles event, every registration, every list submission, every game result lives here. Users can also submit casual games, log ongoing sessions, and mark data private/public.
 
 **Public data surfaces:**
 - `/events/` — future and current events with format, venue, entry
 - `/results/` — global results ranked by TP (tournament points)
 - `/event/{id}/` — individual events with round-by-round pairings and outcomes, battle cards (deployment/objective/condition), scores
 - `/community/{id}/` — community/store pages with member game history
-- Player profiles with faction preferences and event history
+- Player profiles with faction preferences, event history, casual game history
 - List pages (JSON-encoded lists from Tabletop Admiral / Legion List Builder)
 
-**Data richness:** Best-in-class for structured tournament data. When a player submits a JSON-coded list, unit-level and upgrade-level data flows through.
+**Analytics depth (discovered during direct exploration, Day 2):** Longshanks provides substantial descriptive analytics — faction rankings with W/L/draws and win %, battle card breakdowns (objective + secondary), advantage stats (Cunning Deployment ~46%, Advanced Intel ~61%, etc.), blue/red priority splits, game round distributions, coded list data (unit and upgrade play rates), battle card pair frequencies, trend charts over time per battle card. Some deeper features are paywalled (starred).
+
+**Practical implication:** The descriptive layer is theirs and it's mature. Our differentiation lives cleanly in prescriptive (list scoring, matchup planning), predictive (simulation), and personal longitudinal (trend analysis tied to specific list changes) — not in trying to build a better descriptive dashboard.
 
 **Legal status:** Terms restrict use of scraped data for external products. **Directionally, automated fetching of Longshanks data likely violates their TOS regardless of scale** — including user-triggered "paste your event URL, we fetch it" patterns. The distinction between bulk scraping and one-URL-at-a-time fetching feels meaningful in UX but isn't legally protective; both involve a system other than the browser fetching and storing platform data. **Direct partnership is the only clean path** — the site references working with community projects. Group F outreach is critical. *Not legal advice — read the actual TOS carefully in Group G; get a lawyer's read if real revenue is on the line.*
 
@@ -34,7 +36,7 @@
 - **User-exported upload** — if Longshanks offers any export (CSV, JSON, print view), user exports their own data and uploads it. Verify existence during Group F.
 - **Manual entry with heavy assistance** — autocomplete from prior entries, quick-select faction/objective/deployment. Highest friction, lowest TOS exposure.
 
-**Recommendation:** Reach out for partnership first (Group F). If granted, build sanctioned integration. If not, ship browser-extension or manual-entry patterns and lean fully on the "games Longshanks doesn't cover" positioning.
+**Recommendation:** Reach out for partnership first (Group F). If granted, build sanctioned integration. If not, ship browser-extension or manual-entry patterns and lean on the prescriptive/predictive/personal-longitudinal wedges — never on trying to replicate Longshanks' descriptive analytics.
 
 ---
 
@@ -43,16 +45,17 @@
 
 **What it is:** Structured game data users log through your product. List URLs (from Tabletop Admiral / Legion List Builder — we never build lists ourselves), scenario (objective/deployment/condition), turn-by-turn scores, opponent info, notes.
 
-**Positioning — "the tool for games Longshanks doesn't cover":** Longshanks tracks rated singles tournaments only. That's ~5–10% of a competitive player's total games. The remaining 80–90% — casual shop games, practice sessions, unrated leagues, playtest games while tuning a list — is invisible to Longshanks and invisible to Fifth Trooper's analysis. This is the gap. We don't ask users to double-enter tournament data; we cover the games they play that nobody else tracks.
+**Positioning — prescriptive, predictive, and personal-longitudinal analytics on top of Longshanks' descriptive picture:** Longshanks provides a mature descriptive view of the meta (faction rates, battle card outcomes, coded list data, aggregate trends). What doesn't exist anywhere is personal + prescriptive analysis tied to a player's own history: "how has my Krennic list performed since I swapped Grievous for Dooku," "given my play history, what should I bring to CIS?" That's the wedge. Community submissions power it, and users log games with us because the return on investment is personal insight they can't get anywhere else.
 
 **What the user gets back (the draw):**
 - Personal meta stats — "you win 34% vs CIS, 61% vs Rebels"
 - Objective-by-objective breakdown across your games
 - Matchup notes searchable by opponent list or archetype
-- **Trend analysis over time** — "your win rate improved from 45% to 58% since you swapped Grievous for Dooku"
-- List refinement suggestions from your data + aggregate community data
+- **Trend analysis tied to specific list changes** — "your win rate improved from 45% to 58% since you swapped Grievous for Dooku"
+- Prescriptive list refinement suggestions from your data + aggregate community data
+- Predictive simulation of matchups you haven't played yet
 
-None of this exists anywhere for the mid-tier competitive player. Longshanks gives you tournament placings; we give you personal analytics.
+None of this exists in the Legion ecosystem for the mid-tier competitive player. Longshanks gives you descriptive meta; we give you personal, prescriptive, predictive analytics.
 
 **Scope discipline (critical):**
 - We **consume** list URLs from TA / LLB; we never let users construct or edit lists in our tool
@@ -61,7 +64,7 @@ None of this exists anywhere for the mid-tier competitive player. Longshanks giv
 
 **Legal status:** Fully permissible with clear consent language (defined in Group G). Users grant a license to use aggregate data for analysis and model training; they retain ownership.
 
-**Recommendation:** Design the submission workflow into the app from Day 1. Premium tier's personal analytics is the hook that drives submissions.
+**Recommendation:** Design the submission workflow into the app from Day 1. Premium tier's personal longitudinal analytics is the hook that drives submissions.
 
 ---
 

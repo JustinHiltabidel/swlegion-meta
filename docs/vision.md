@@ -42,7 +42,7 @@ Biweekly at launch, weekly by Phase 4. Meta commentary, tournament recaps, unit-
 
 **Premium ($20/mo at launch → $25–30 in Phase 5+) — full stack.**
 - **Full matchup simulator** — predictive game outcome models with detailed variant analysis. *"The ability to simulate is the beast."*
-- **Personal analytics — the tool for games Longshanks doesn't track.** Longshanks covers rated tournaments (~5–10% of a competitive player's total games). We cover the rest: casual games at the shop, practice sessions, unrated leagues, playtest games while tuning a list. Users log games via list URLs from Tabletop Admiral / Legion List Builder plus scenario data. In return, they get personal meta stats ("you win 34% vs CIS, 61% vs Rebels"), objective-by-objective breakdowns, matchup notes searchable by opponent list or archetype, and *trend analysis over time* — "your win rate improved from 45% to 58% since you swapped Grievous for Dooku." No dual entry with Longshanks; complementary coverage.
+- **Personal longitudinal analytics — the prescriptive layer on top of Longshanks' descriptive picture.** Longshanks already provides a rich descriptive view of the Legion meta: faction rates, battle card outcomes, coded list data, aggregate trends over time. What we add is *personal* and *prescriptive*: your specific matchup history, your specific list evolution, your specific weak spots. Users log games via list URLs from Tabletop Admiral / Legion List Builder plus scenario data. In return, they get personal meta stats ("you win 34% vs CIS, 61% vs Rebels"), objective-by-objective breakdowns, matchup notes searchable by opponent list or archetype, and *trend analysis tied to specific list changes* — "your win rate improved from 45% to 58% since you swapped Grievous for Dooku." This is the personal, longitudinal, decision-support view that doesn't exist elsewhere.
 - **Community data flywheel** — anonymized submissions improve models, which improve analysis for all premium users
 
 ---
@@ -108,6 +108,7 @@ Ambitious outcomes (5k subs, $5k+ MRR at M12) are aspirational — the project i
 - **Payment platform.** Patreon vs. Stripe — Patreon for simplicity at launch; migrate to Stripe in Phase 5 if margin or data ownership pressure warrants.
 - **First scraper target.** Determined by Group E (data source dossier) — likely Best Coast Pairings if Longshanks doesn't grant partnership access.
 - **TTA / LLB integration outreach.** Phase 3–4 conversation with the maintainers of Tabletop Admiral and Legion List Builder, proposing a read-only OAuth API. Requires a real product and user base first; not a Phase 0 conversation.
+- **Paid tier refinement in Phase 1.** Direct exploration of Longshanks' analytics revealed richer descriptive capability than initially assessed (coded list data, battle card pairs, aggregate trends). Paid-tier features — especially "matchup planning" and elements of list scoring — need sharper prescriptive framing so they don't overlap with what Longshanks already provides descriptively. Revisit tier definitions once real data is flowing (Phase 1).
 
 ---
 
