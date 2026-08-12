@@ -42,8 +42,8 @@ Biweekly at launch, weekly by Phase 4. Meta commentary, tournament recaps, unit-
 
 **Premium ($20/mo at launch → $25–30 in Phase 5+) — full stack.**
 - **Full matchup simulator** — predictive game outcome models with detailed variant analysis. *"The ability to simulate is the beast."*
-- **Personal game analysis** — users submit structured game data (lists, scenario, turn-by-turn scores, notes) and receive AI-augmented coaching feedback
-- **Community data flywheel** — submissions improve models, which improve analysis for all premium users
+- **Personal analytics — the tool for games Longshanks doesn't track.** Longshanks covers rated tournaments (~5–10% of a competitive player's total games). We cover the rest: casual games at the shop, practice sessions, unrated leagues, playtest games while tuning a list. Users log games via list URLs from Tabletop Admiral / Legion List Builder plus scenario data. In return, they get personal meta stats ("you win 34% vs CIS, 61% vs Rebels"), objective-by-objective breakdowns, matchup notes searchable by opponent list or archetype, and *trend analysis over time* — "your win rate improved from 45% to 58% since you swapped Grievous for Dooku." No dual entry with Longshanks; complementary coverage.
+- **Community data flywheel** — anonymized submissions improve models, which improve analysis for all premium users
 
 ---
 
@@ -52,7 +52,7 @@ Biweekly at launch, weekly by Phase 4. Meta commentary, tournament recaps, unit-
 Explicit list of what this is NOT — protects against scope creep as good ideas surface:
 
 - **Beginner tutorial content** — this assumes tournament interest and existing game familiarity
-- **List building tool from scratch** — the product analyzes lists; construction is Tabletop Admiral / Legion HQ2's job
+- **List construction** — we consume list URLs from Tabletop Admiral / Legion List Builder and parse the JSON; we never build lists ourselves. Users edit lists on those tools and re-share the URL. This discipline is what keeps us permanently on the analysis side of the line.
 - **Rules resource / errata reference** — AMG and official channels handle this
 - **Community forum / social platform** — Discord and Reddit already own this space
 
@@ -70,8 +70,11 @@ Explicit list of what this is NOT — protects against scope creep as good ideas
 - Discord — Legion-focused competitive servers
 - Facebook — competitive Legion groups
 
-**Long-term aspiration (Phase 5+):**
-- OAuth integration with Tabletop Admiral and Legion HQ2 so users can pull their lists directly into the product. Would materially reduce friction and could 10x adoption if landed. Named here so early schema decisions don't preclude round-tripping with those systems.
+**Long-term aspiration (Phase 3+):**
+- **Read-only OAuth sync with Tabletop Admiral and Legion List Builder.** User clicks "connect TTA" (or LLB), authorizes read-only access, and their lists appear in our product automatically. On-demand refresh + periodic scheduled poll on our side; no webhooks required from theirs. Read-only scope is deliberate — it makes the ask easier for the maintainers to grant, and it enforces our non-goal: we consume lists, we never construct them.
+- **This requires their cooperation, not just our engineering.** Neither TTA nor LLB currently publishes OAuth APIs. Realizing this means outreach to their maintainers, proposing the integration, and offering to help with spec and testing. Community-tool maintainers tend to be more receptive than platform companies, but we need something to show them first — this outreach is a Phase 3–4 conversation, once we have a real product and users.
+- **Interim fallback (Phase 0–2):** users paste TTA/LLB list URLs manually. The visible JSON from those URLs is parseable without automation. Higher friction, but it works and is defensible.
+- **Longshanks integration is a partnership question, not a technical one.** Automated fetching of Longshanks data likely violates their TOS regardless of scale. The only clean path to importing tournament games is direct partnership (see Group F outreach). If not granted, we lean fully on user-submitted data for the "games Longshanks doesn't cover" positioning — which is 80–90% of games anyway.
 
 ---
 
@@ -104,6 +107,7 @@ Ambitious outcomes (5k subs, $5k+ MRR at M12) are aspirational — the project i
 - **Newsletter platform.** Substack vs. Beehiiv — decide when nearing Phase 2. Beehiiv is stronger for growth mechanics; Substack for near-term discovery.
 - **Payment platform.** Patreon vs. Stripe — Patreon for simplicity at launch; migrate to Stripe in Phase 5 if margin or data ownership pressure warrants.
 - **First scraper target.** Determined by Group E (data source dossier) — likely Best Coast Pairings if Longshanks doesn't grant partnership access.
+- **TTA / LLB integration outreach.** Phase 3–4 conversation with the maintainers of Tabletop Admiral and Legion List Builder, proposing a read-only OAuth API. Requires a real product and user base first; not a Phase 0 conversation.
 
 ---
 

@@ -12,10 +12,8 @@ Changelog:
 
 from datetime import date, datetime
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
-
 
 # ============================================================================
 # Enums — constrained value sets
@@ -101,7 +99,7 @@ class User(BaseModel):
     id: str
     email: EmailStr
     tier: SubscriptionTier = SubscriptionTier.FREE
-    linked_player_id: Optional[str] = None  # who they are in-game
+    linked_player_id: str | None = None  # who they are in-game
     created_at: datetime
 
 
@@ -115,8 +113,8 @@ class Player(BaseModel):
     id: str
     display_name: str
     faction_prefs: list[Faction] = Field(default_factory=list)
-    region: Optional[str] = None
-    longshanks_id: Optional[str] = None  # nullable — future partnership integration
+    region: str | None = None
+    longshanks_id: str | None = None  # nullable — future partnership integration
     created_at: datetime
 
 
@@ -126,12 +124,12 @@ class Event(BaseModel):
     id: str
     name: str
     date: date
-    location: Optional[str] = None
+    location: str | None = None
     format: str  # e.g., "1000pt Standard", "GT 800pt"
     ruleset_version: str  # e.g., "2.6", "3.0"
-    size: Optional[int] = None  # player count
+    size: int | None = None  # player count
     source: DataSource
-    longshanks_event_id: Optional[str] = None  # nullable — partnership integration
+    longshanks_event_id: str | None = None  # nullable — partnership integration
 
 
 # ============================================================================
@@ -153,7 +151,7 @@ class ListIdentity(BaseModel):
     display_name: str  # user-chosen: "Krennic Death Star", "my main Sep list"
     faction: Faction
     created_at: datetime
-    retired_at: Optional[datetime] = None  # user marks retired (soft-delete)
+    retired_at: datetime | None = None  # user marks retired (soft-delete)
 
 
 class ListSnapshot(BaseModel):
@@ -168,7 +166,7 @@ class ListSnapshot(BaseModel):
     composition_json: dict  # parsed TA/LLB JSON — full unit + upgrade structure
     points: int
     version_hash: str  # fingerprint for dedup / same-list detection
-    source_url: Optional[str] = None  # TA or LLB URL if imported
+    source_url: str | None = None  # TA or LLB URL if imported
     source_platform: SourcePlatform
     ruleset_version: str
     created_at: datetime
@@ -186,8 +184,8 @@ class Game(BaseModel):
     id: str
 
     # Container (nullable — casual games have neither)
-    event_id: Optional[str] = None
-    round: Optional[int] = None
+    event_id: str | None = None
+    round: int | None = None
 
     # Who played, with what
     player_a_id: str
@@ -202,8 +200,8 @@ class Game(BaseModel):
 
     # Outcome
     outcome: GameOutcome
-    score_a: Optional[int] = None
-    score_b: Optional[int] = None
+    score_a: int | None = None
+    score_b: int | None = None
 
     # Context
     game_type: GameType
@@ -212,10 +210,10 @@ class Game(BaseModel):
     source: DataSource
 
     # Freeform
-    notes: Optional[str] = None
+    notes: str | None = None
 
     # Provenance
-    submitted_by_user_id: Optional[str] = None
+    submitted_by_user_id: str | None = None
     created_at: datetime
 
 
