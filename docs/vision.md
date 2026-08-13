@@ -35,6 +35,8 @@ Travels to majors, deeply knowledgeable, cares about hyper-tuned edge. Small pop
 **Free — the newsletter.**
 Biweekly at launch, weekly by Phase 4. Meta commentary, tournament recaps, unit-level analysis, tier lists. This is the funnel and the credibility engine. Every issue proves the analytical quality that justifies the paid tiers.
 
+*Data source for meta commentary:* ideal is aggregate, anonymized data provided by a data partner (Longshanks being the natural first ask via Group F, Track A). Fallback if no partnership: curated community discussion and publicly published tournament coverage.
+
 **Paid ($10/mo) — decision support.**
 - **List scorer** — "here's how your list stacks against the current meta, with weak spots identified"
 - **Archetype playbooks** — deep guides per faction/build with unit-level reasoning
@@ -109,6 +111,7 @@ Ambitious outcomes (5k subs, $5k+ MRR at M12) are aspirational — the project i
 - **First scraper target.** Determined by Group E (data source dossier) — likely Best Coast Pairings if Longshanks doesn't grant partnership access.
 - **TTA / LLB integration outreach.** Phase 3–4 conversation with the maintainers of Tabletop Admiral and Legion List Builder, proposing a read-only OAuth API. Requires a real product and user base first; not a Phase 0 conversation.
 - **Paid tier refinement in Phase 1.** Direct exploration of Longshanks' analytics revealed richer descriptive capability than initially assessed (coded list data, battle card pairs, aggregate trends). Paid-tier features — especially "matchup planning" and elements of list scoring — need sharper prescriptive framing so they don't overlap with what Longshanks already provides descriptively. Revisit tier definitions once real data is flowing (Phase 1).
+- **Newsletter data source (Group F outcome).** Two tracks in the Longshanks outreach: Track A is aggregate anonymized meta data (powers the newsletter with real analytical depth), Track B is individual user history access (powers the premium tier). They can grant A, B, both, or neither. Product still works if both are declined — user-submitted data covers everything and the newsletter relies on curated community coverage. Resolution comes with Longshanks' reply.
 
 ---
 

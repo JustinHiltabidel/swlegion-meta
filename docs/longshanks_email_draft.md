@@ -1,18 +1,18 @@
-# Longshanks Outreach Email — Draft v2
+# Longshanks Outreach Email — Draft v3
 
 **Group F deliverable · Phase 0**
 
 *Instructions: review, edit for voice, personalize the sender info, then send. After send: log date in `docs/data_sources.md`, set 2-week follow-up reminder.*
 
-*Changelog: v2 (Day 2 late) — reframed positioning after direct exploration of Longshanks' analytics pages revealed richer capabilities than initially assessed. Removed "games Longshanks doesn't track" framing (they do track casual games); repositioned as prescriptive + personal longitudinal layer on top of Longshanks' descriptive picture.*
+*Changelog: v3 (Day 2 late) — voice pass to sound less templated. Two-track ask added: aggregate anonymized data for the newsletter (smaller ask) and individual user history access for personal analytics (bigger ask). Either, both, or neither can work. Removed em dashes and parallel-structure patterns.*
 
 ---
 
-**Recipient:** Longshanks admin / community contact (identify current contact channel — email, form, or Discord — before sending)
+**Recipient:** Longshanks admin / community contact (identify current contact channel: email, form, or Discord, before sending)
 
 **Subject options (pick one):**
-- Partnership inquiry — competitive Legion analytics project
-- Building a Legion analytics tool — would love your input on data access
+- Partnership inquiry for a competitive Legion analytics project
+- Building a Legion analytics tool, would love your input on data access
 - Question about data partnerships for a Legion community project
 
 ---
@@ -21,74 +21,73 @@
 
 Hi,
 
-I'm Justin Hiltabidel, a competitive Star Wars: Legion player and data scientist. I'm building an analytics tool for mid-tier competitive players focusing on the folks trying to break into the top of the RTT / regional scene, and I wanted to reach out before doing anything technical with your platform.
+I'm Justin Hiltabidel. I play competitive Star Wars: Legion and I work in data science. I'm building an analytics tool aimed at mid-tier competitive players who are trying to break into the top of the RTT and regional scene, and I wanted to reach out before doing anything technical involving Longshanks.
 
-Longshanks is obviously the foundation of the competitive Legion data ecosystem — and after spending real time in your analytics pages recently, I have a much better appreciation for the depth of what you've built. The coded list data, battle card pair analysis, and trend charts in particular are impressive. The descriptive picture of the Legion meta is already in good hands. I don't want to build anything that competes with that or operates around your terms. I'd rather have a conversation up front.
+I've spent real time going through your analytics pages recently and I've got a much better appreciation for how much you've built. The coded list data, the battle card pair analysis, and the trend charts over time are all really solid. You're clearly ahead on the descriptive side of the meta. I don't want to build anything that competes with that or works around your terms, so I'd rather have this conversation up front.
 
-**What I'm building, in short:**
+Here's what I'm building. It's a tiered product focused on decision-support and personal longitudinal analytics for individual players. Think of it as a layer sitting on top of the descriptive work Longshanks already does.
 
-A tiered product focused on decision-support and personal longitudinal analytics — the prescriptive and personalized layer on top of the descriptive picture Longshanks already provides.
+The paid tier includes list scoring against the current meta and matchup planning tools. The premium tier is what I'm most excited about. It has matchup simulation using predictive models, plus personal trend analysis tied to specific list changes. So a player could see something like "my win rate went from 45% to 58% after I swapped Grievous for Dooku," or "I'm 34% into CIS but 61% into Rebels, here's what to work on next." Nothing like that seems to exist yet for Legion.
 
-Concretely, the paid tier includes list scoring against the current meta and matchup planning tools. The premium tier is the flagship: matchup simulation (predictive game outcome models) and personal longitudinal analytics tied to specific list changes — so a player can see "my win rate improved from 45% to 58% since I swapped Grievous for Dooku," or "I'm 34% into CIS but 61% into Rebels — here's what to work on." That kind of personal, longitudinal, decision-support view doesn't exist anywhere in the Legion ecosystem I've found.
+Above that is a free newsletter with meta commentary and tournament analysis.
 
-Above that, a free newsletter covers meta commentary and tournament analysis (using publicly discussed data, not your private data).
+Why I'm reaching out. There are really two separate places where Longshanks could potentially fit, and either one, both, or neither could work for you.
 
-**Why I'm reaching out:**
+The first is aggregate, anonymized data for the newsletter. Faction win rates, battle card play rates, archetype trends, that sort of thing. If I had access to that from you directly, credited on every issue, the free newsletter would have real analytical depth from Day 1 without me needing to scrape community discussion. This is probably the smaller ask.
 
-The natural bridge in this design is a player's history on Longshanks — both their rated tournament games and, I noticed while exploring the site, their casual game submissions too. Ideally, a player using my tool would be able to see personal trend analysis and prescriptive recommendations drawn from the games they've already logged with you, without having to double-enter anything.
+The second is a way for a user of my tool to pull their own history from Longshanks. Both their tournament games and, from what I saw exploring the site, their casual game submissions too. This would let a player get the personal analytics I described without having to log everything twice.
 
-I can imagine a few ways that might work:
+For either one, a few paths could work:
 
-- Any form of read access — API, data export, or sanctioned scraping guidelines — that would let a user pull their own event and casual history into my tool
-- A user-driven export path, if you have or would consider a "download my data" feature, that would let players move their history themselves without me touching your platform
-- Something you'd propose that fits your model better than what I've thought of
+- Any kind of read access, whether that's an API, a data export, or sanctioned guidelines
+- A "download my data" feature that lets players move their own history without me touching your platform directly
+- Something you'd propose that fits how you think about this better than what I've come up with
 
-Whatever the answer, I want to do this the right way. If the answer is "no access, please don't scrape," that's a real answer and I'll design around it — leaning entirely on user-submitted data collected through my own tool.
+If the answer is "no access, please don't scrape," that's a real answer and I'll design around it. The tool still works with user-submitted data. It just means people log everything directly with me from the start rather than importing anything.
 
-**What I can offer in return:**
+What I can offer back:
 
 - Public credit on the site, in the newsletter, and in any published analysis
-- Explicit non-competition — my content is prescriptive, predictive, and personal-longitudinal; yours is the tournament infrastructure and community descriptive layer. Complementary products.
-- Coordination on anything that touches your data — if you want to review how it's used or set limits, I'm happy to work within them
-- Whatever else would be useful to you
+- Explicit non-competition. My work is prescriptive and personal. Yours is the tournament infrastructure and community meta layer. Two products in the same ecosystem.
+- Coordination on anything that touches your data. Happy to work inside whatever limits you'd want to set.
+- Anything else that would be useful on your end
 
-Happy to jump on a call, exchange emails, or just get a quick "here's how we think about this" reply. No rush on my end — I'd rather move slowly and correctly than fast and wrong.
+Happy to jump on a call, exchange emails, or just get a quick reply on how you think about this. No rush. I'd rather move slowly and get it right than fast and mess something up.
 
-Thanks for building Longshanks. It's the reason the competitive Legion scene has a shared truth to argue about, and it's what makes a project like mine possible in the first place.
+Thanks for building Longshanks. It's the reason the competitive Legion community has a shared set of numbers to argue about, and it's what makes a project like this even possible.
 
 Best,
 Justin Hiltabidel
 justin.hiltabidel@gmail.com
-[GitHub: https://github.com/JustinHiltabidel/swlegion-meta]
+GitHub: https://github.com/JustinHiltabidel/swlegion-meta
 
 ---
 
-## Notes on the draft (v2)
+## Notes on the draft (v3)
 
-**What changed from v1 and why:**
+**What changed from v2:**
 
-- Direct exploration of Longshanks' analytics pages showed richer capability than we'd assessed from outside: they track casual games (not just rated), they have deep descriptive analytics (coded list data, battle card pairs, faction/objective breakdowns, trend charts). The "games Longshanks doesn't track" wedge from v1 was demonstrably wrong.
-- Repositioned as **prescriptive + personal longitudinal + predictive** layer on top of their descriptive picture. This is honest, defensible, and gives them a reason to engage rather than defend.
-- Added specific compliments (coded list data, battle card pairs, trend charts) that prove I've actually looked at the platform. Generic praise reads as hollow; specific praise reads as respect.
+- Voice pass. Removed em dashes, parallel triads ("prescriptive, predictive, personal-longitudinal"), and stock transitional phrases ("Concretely,"). Reads more like something you'd write than something a template would produce.
+- Two-track ask. The v2 version bundled aggregate data and individual history into one blurry request. v3 splits them clearly so they can grant either, both, or neither without confusion.
+- Updated the newsletter sentence. Instead of "using publicly discussed data, not your private data" (which quietly implies scraping community discussion), the newsletter is now positioned as ideally powered by aggregate data from Longshanks, with a fallback path that doesn't need to be spelled out in the email.
 
-**What this email does deliberately:**
+**Two-track structure:**
 
-- **Leads with humility, not confidence.** "Before doing anything technical" signals respect for their ownership immediately.
-- **Reframes the wedge as complementary.** Prescriptive/predictive/personal-longitudinal on top of Longshanks' descriptive layer. Two products, one ecosystem.
-- **Acknowledges casual game submissions on their side.** Signals I did the work, and reframes the bridge as "your users' existing history" rather than "double entry avoidance."
-- **Offers three specific paths forward.** Easier for them to say yes to a menu than to invent a solution.
-- **Gives them an easy out.** "No access, that's fine, I'll design around it" removes pressure — they're more likely to engage when they know there's no cost to declining.
+- **Track A (aggregate data for newsletter):** Lower risk for them. Faction win rates, battle card play rates, archetype trends. Powers the free tier. Credit on every issue.
+- **Track B (individual history for personal analytics):** Bigger ask, harder yes, clearer value. Powers the premium tier. Lets users see their own longitudinal trends without double-logging.
+
+They might say yes to A and no to B. That's a totally viable outcome. Track A launches the newsletter with real analytical depth, Track B remains user-submitted only, and the product still works.
 
 **What to personalize before sending:**
 
-- Your faction (or top 2–3 you play competitively)
+- Your faction, or top 2 or 3 you play competitively
 - Your region and typical event circuit
-- Any relevant competitive context — recent GTs, podium finishes, community involvement outside RBDG
+- Any relevant competitive context, like recent GTs, podium finishes, community involvement (that isn't RBDG, since we're keeping that separate)
 - Confirm the email signature values
 
 **What not to change:**
 
-- Length. It reads long on purpose. Short outreach reads as templated.
-- The specific product-praise callouts (coded list data, battle card pairs, trend charts). They're load-bearing — remove them and the email loses its "actually looked at this" credibility.
-- The three-option menu. Concrete asks convert.
+- The two-track structure. It's the strongest part of this ask.
+- The specific product praise callouts (coded list data, battle card pairs, trend charts). They prove you've actually looked at the platform.
 - The "no is fine" clause. Removes pressure, increases response rate.
+- Overall length. Short outreach reads as templated. This reads as considered.
