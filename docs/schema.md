@@ -49,7 +49,7 @@ The **persistent identity** of a list — "my Krennic Death Star" as a continuou
 A **specific composition at a moment in time**. New snapshot when composition changes. Games reference specific snapshots so the exact table state is preserved. `id`, `identity_id`, `composition_json` (parsed TA/LLB JSON), `points`, `version_hash` (dedup fingerprint), `source_url`, `source_platform`, `ruleset_version`, `created_at`, `is_current`.
 
 ### Game
-The atom. `id`, `event_id` (nullable), `round` (nullable), `player_a_id`, `player_b_id`, `list_a_snapshot_id`, `list_b_snapshot_id`, `objective`, `deployment`, `condition`, `outcome`, `score_a`, `score_b`, `game_type`, `played_at`, `ruleset_version`, `source`, `notes`, `submitted_by_user_id`, `created_at`.
+The atom. `id`, `event_id` (nullable), `round` (nullable), `player_a_id`, `player_b_id`, `list_a_snapshot_id`, `list_b_snapshot_id`, `primary_mission`, `secondary_mission`, `advantage_a`, `advantage_b` (nullable), `outcome`, `conceded`, `score_a`, `score_b`, `game_type`, `played_at`, `ruleset_version`, `source`, `notes`, `submitted_by_user_id`, `created_at`.
 
 ### Unit + Upgrade (reference tables)
 Canonical catalog data from AMG. Versioned by ruleset so trend analysis doesn't blur pre/post-balance data.
@@ -111,12 +111,13 @@ The schema must be able to represent one real tournament game end-to-end. See `t
 ## Open items for v0.2 and beyond
 
 - **Unit/Upgrade catalog population** — needs AMG data source (Phase 1 work)
-- **Objective / Deployment / Condition enumeration** — currently free-form strings; likely wants an enum or reference table once we have real data (Phase 1 refinement)
+- **Primary / Secondary mission and Advantage enumeration** — currently free-form strings; likely wants an enum or reference table once we have real data (Phase 1 refinement)
 - **Multi-round tournaments** — Events don't yet model round structure; may need a `Round` entity if we want to query "how did you do in Round 3s across all your events"
 - **Team events** — schema assumes 1v1; team formats would need extension
 - **Non-standard scenarios** — narrative games, special formats not currently modeled
 
 ## Version history
 
+- **v0.3** · Phase 1 Session 1 — Game scenario fields renamed to match the current mission structure: `objective`/`deployment`/`condition` → `primary_mission`/`secondary_mission`/`advantage_a`/`advantage_b`. Added `conceded`. Founder-ingested games store no opponent names (single anonymous opponent player).
 - **v0.2** · Phase 1 Session 1 — refactored from pure Pydantic `BaseModel` to `SQLModel` for persistence. Every entity is now `table=True` with primary keys, foreign keys, and JSON columns for complex fields (`list[Faction]`, `dict`). Added `FOUNDER_HISTORICAL` to `DataSource` enum for tagging imported founder game data. Design principles above remain unchanged; only the persistence layer was added.
 - **v0.1** · Day 2 of Phase 0 — initial draft. Six entities + two reference tables. ListIdentity + ListSnapshot pattern. Ready for Phase 1 refinement based on real data.

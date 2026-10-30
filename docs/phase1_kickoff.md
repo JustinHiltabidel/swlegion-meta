@@ -110,17 +110,23 @@ CSV columns for manual entry (target: minimize typing, ~15-16 columns):
 - `ruleset_version` (e.g., "2.6", required)
 - `round` (blank for casual)
 - `game_type` (casual/tournament_rated/tournament_unrated/practice/league/playtest)
-- `my_list_name` (e.g., "Han Gunline v3")
-- `my_faction`
-- `opponent_name` (blank for unknown)
+- `list_name` (e.g., "Han Gunline v3")
+- `faction`
+- `list_url` (optional — TA/LLB link)
 - `opponent_faction`
-- `objective`
-- `deployment`
-- `condition`
-- `my_score`
+- `primary_mission`
+- `secondary_mission`
+- `advantage` (your advantage card)
+- `opponent_advantage` (optional — blank if unknown)
+- `score`
 - `opponent_score`
 - `outcome` (win/loss/tie/incomplete — can be derived from scores if provided)
+- `conceded` (optional — X/yes/true if the loser conceded; outcome required)
 - `notes` (optional)
+
+**No opponent names.** Opponents are anonymized at ingest — every game is
+recorded against a single "Anonymous opponent" player. Only opponent faction
+and advantage card are kept.
 
 Include one example row filled in so Justin has a reference.
 

@@ -11,7 +11,7 @@ Living document. Add items as they surface, reprioritize as phases progress.
 ### Data + schema
 - [ ] Examine Tabletop Admiral's actual JSON export format directly — validate canonical schema alignment before real ingest (open item in `docs/schema.md`)
 - [ ] Populate Unit + Upgrade reference tables from AMG published data
-- [ ] Enum-ify objectives / deployments / conditions in the schema — currently free-form strings, promote to enum once real data flows
+- [ ] Enum-ify primary missions / secondary missions / advantages in the schema — currently free-form strings, promote to enum once real data flows
 - [ ] Design and build the community game submission flow (form or Streamlit MVP)
 - [ ] Confirm current Legion ruleset version and replace `RULESET = "2.6"` placeholder in `tests/test_schema.py`
 

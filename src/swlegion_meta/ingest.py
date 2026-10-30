@@ -47,19 +47,19 @@ REQUIRED_COLUMNS = [
     "ruleset_version",
     "round",
     "game_type",
-    "my_list_name",
-    "my_faction",
-    "opponent_name",
+    "list_name",
+    "faction",
     "opponent_faction",
-    "objective",
-    "deployment",
-    "condition",
-    "my_score",
+    "primary_mission",
+    "secondary_mission",
+    "advantage",
+    "opponent_advantage",
+    "score",
     "opponent_score",
     "outcome",
     "notes",
 ]
-OPTIONAL_COLUMNS = ["my_list_url"]
+OPTIONAL_COLUMNS = ["list_url", "conceded"]
 
 FACTION_ALIASES = {
     "rebel": Faction.REBELS,
@@ -85,7 +85,12 @@ OUTCOME_ALIASES = {
     "incomplete": GameOutcome.INCOMPLETE,
 }
 
-UNKNOWN_OPPONENT = "Unknown opponent"
+TRUE_VALUES = {"x", "yes", "y", "true", "t", "1"}
+FALSE_VALUES = {"", "no", "n", "false", "f", "0"}
+
+# Opponents are never named — every game is against this single placeholder
+# player, so the stored data carries no third-party identities.
+ANONYMOUS_OPPONENT = "Anonymous opponent"
 
 
 class IngestError(Exception):
@@ -100,17 +105,18 @@ class ParsedRow:
     ruleset_version: str
     round: int | None
     game_type: GameType
-    my_list_name: str
-    my_faction: Faction
-    my_list_url: str | None
-    opponent_name: str
+    list_name: str
+    faction: Faction
+    list_url: str | None
     opponent_faction: Faction
-    objective: str
-    deployment: str
-    condition: str
-    my_score: int | None
+    primary_mission: str
+    secondary_mission: str
+    advantage: str
+    opponent_advantage: str | None
+    score: int | None
     opponent_score: int | None
     outcome: GameOutcome
+    conceded: bool
     notes: str | None
     fingerprint: str  # hash of the whole normalized row — the game's identity
 
@@ -175,10 +181,29 @@ def _parse_int(raw: str, column: str) -> int | None:
         raise ValueError(f"{column} must be a whole number, got {raw!r}") from None
 
 
+def parse_bool(raw: str, column: str) -> bool:
+    key = raw.strip().lower()
+    if key in TRUE_VALUES:
+        return True
+    if key in FALSE_VALUES:
+        return False
+    raise ValueError(f"{column} must be X/yes/true or blank, got {raw!r}")
+
+
 def resolve_outcome(
-    raw: str, my_score: int | None, opp_score: int | None
+    raw: str, my_score: int | None, opp_score: int | None, conceded: bool = False
 ) -> GameOutcome:
-    """Use the outcome column if given, else derive from scores. Both given → must agree."""
+    """Use the outcome column if given, else derive from scores. Both given → must agree.
+
+    A conceded game must be a win or loss, and its outcome must be given explicitly:
+    the score at concession time doesn't decide the result.
+    """
+    if conceded:
+        outcome = OUTCOME_ALIASES.get(raw.strip().lower())
+        if outcome not in (GameOutcome.PLAYER_A_WIN, GameOutcome.PLAYER_B_WIN):
+            raise ValueError("conceded games need outcome win or loss")
+        return outcome
+
     from_scores = None
     if my_score is not None and opp_score is not None:
         if my_score > opp_score:
@@ -239,19 +264,22 @@ def parse_row(row: dict[str, str], line: int) -> ParsedRow:
     ruleset_version = required("ruleset_version")
     raw_game_type = required("game_type")
     game_type = attempt(parse_game_type, raw_game_type) if raw_game_type else None
-    my_list_name = required("my_list_name")
-    raw_my_faction = required("my_faction")
-    my_faction = attempt(parse_faction, raw_my_faction) if raw_my_faction else None
+    list_name = required("list_name")
+    raw_faction = required("faction")
+    faction = attempt(parse_faction, raw_faction) if raw_faction else None
     raw_opp_faction = required("opponent_faction")
     opp_faction = attempt(parse_faction, raw_opp_faction) if raw_opp_faction else None
-    objective = required("objective")
-    deployment = required("deployment")
-    condition = required("condition")
+    primary_mission = required("primary_mission")
+    secondary_mission = required("secondary_mission")
+    advantage = required("advantage")
 
     round_ = attempt(_parse_int, row.get("round", ""), "round")
-    my_score = attempt(_parse_int, row.get("my_score", ""), "my_score")
+    score = attempt(_parse_int, row.get("score", ""), "score")
     opp_score = attempt(_parse_int, row.get("opponent_score", ""), "opponent_score")
-    outcome = attempt(resolve_outcome, row.get("outcome", ""), my_score, opp_score)
+    conceded = attempt(parse_bool, row.get("conceded", ""), "conceded")
+    outcome = attempt(
+        resolve_outcome, row.get("outcome", ""), score, opp_score, bool(conceded)
+    )
 
     event_name = row.get("event_name") or None
     if (
@@ -271,17 +299,18 @@ def parse_row(row: dict[str, str], line: int) -> ParsedRow:
         ruleset_version=ruleset_version,
         round=round_,
         game_type=game_type,
-        my_list_name=my_list_name,
-        my_faction=my_faction,
-        my_list_url=row.get("my_list_url") or None,
-        opponent_name=row.get("opponent_name") or UNKNOWN_OPPONENT,
+        list_name=list_name,
+        faction=faction,
+        list_url=row.get("list_url") or None,
         opponent_faction=opp_faction,
-        objective=objective,
-        deployment=deployment,
-        condition=condition,
-        my_score=my_score,
+        primary_mission=primary_mission,
+        secondary_mission=secondary_mission,
+        advantage=advantage,
+        opponent_advantage=row.get("opponent_advantage") or None,
+        score=score,
         opponent_score=opp_score,
         outcome=outcome,
+        conceded=conceded,
         notes=row.get("notes") or None,
         fingerprint=_hash(*normalized),
     )
@@ -461,6 +490,7 @@ def ingest_rows(
     touched_identities: set[str] = set()
 
     me = _player(session, player_name, now, result)
+    opponent = _player(session, ANONYMOUS_OPPONENT, now, result)
 
     for r in rows:
         game_id = f"game_{r.fingerprint}"
@@ -469,22 +499,17 @@ def ingest_rows(
             continue
 
         event = _event(session, r, source, result) if r.event_name else None
-        opponent = _player(session, r.opponent_name, now, result)
         played_at = _played_at(r.played_on)
 
-        my_identity = _identity(
-            session, me, r.my_list_name, r.my_faction, played_at, result
-        )
-        # We rarely know the opponent's exact list — one placeholder identity per
-        # (opponent, faction) satisfies the FKs without inventing composition.
+        my_identity = _identity(session, me, r.list_name, r.faction, played_at, result)
+        # Opponent lists are unknown and anonymous — one placeholder identity per
+        # faction satisfies the FKs without inventing composition.
         opp_list_name = f"{r.opponent_faction.value} (list unknown)"
         opp_identity = _identity(
             session, opponent, opp_list_name, r.opponent_faction, played_at, result
         )
 
-        my_snap = _snapshot(
-            session, my_identity, r, r.my_list_url, default_points, result
-        )
+        my_snap = _snapshot(session, my_identity, r, r.list_url, default_points, result)
         opp_snap = _snapshot(session, opp_identity, r, None, default_points, result)
         touched_identities.update({my_identity.id, opp_identity.id})
 
@@ -497,11 +522,13 @@ def ingest_rows(
                 player_b_id=opponent.id,
                 list_a_snapshot_id=my_snap.id,
                 list_b_snapshot_id=opp_snap.id,
-                objective=r.objective,
-                deployment=r.deployment,
-                condition=r.condition,
+                primary_mission=r.primary_mission,
+                secondary_mission=r.secondary_mission,
+                advantage_a=r.advantage,
+                advantage_b=r.opponent_advantage,
                 outcome=r.outcome,
-                score_a=r.my_score,
+                conceded=r.conceded,
+                score_a=r.score,
                 score_b=r.opponent_score,
                 game_type=r.game_type,
                 played_at=played_at,

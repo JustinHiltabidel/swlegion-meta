@@ -7,12 +7,15 @@ Uses SQLModel to serve two purposes at once: Pydantic validation (as DTOs)
 and SQLAlchemy ORM (as persisted tables). Every entity here is marked
 table=True and becomes a real database table.
 
-Version: 0.2
+Version: 0.3
 Changelog:
   - 0.2 (Phase 1 Session 1): Converted from pure Pydantic to SQLModel to
         support persistence. All entities now table=True with primary keys,
         foreign keys, and JSON columns for complex fields. Added
         FOUNDER_HISTORICAL to DataSource for imported founder game data.
+  - 0.3 (Phase 1 Session 1): Game scenario fields match the current mission
+        structure — objective/deployment/condition replaced by primary_mission,
+        secondary_mission, advantage_a, advantage_b. Added Game.conceded.
   - 0.1 (Day 2 of Phase 0): Initial draft. Six entities + two reference
         tables. ListIdentity + ListSnapshot pattern (Moxfield/Archidekt style).
 """
@@ -201,15 +204,18 @@ class Game(SQLModel, table=True):
     list_a_snapshot_id: str = Field(foreign_key="listsnapshot.id")
     list_b_snapshot_id: str = Field(foreign_key="listsnapshot.id")
 
-    # Scenario — currently free-form strings; likely enum in v0.3
-    objective: str = Field(index=True)
-    deployment: str = Field(index=True)
-    condition: str = Field(index=True)
+    # Mission setup — free-form strings for now; likely enum once real data flows.
+    # Advantage cards are chosen per player; B's is often unknown.
+    primary_mission: str = Field(index=True)
+    secondary_mission: str = Field(index=True)
+    advantage_a: str = Field(index=True)
+    advantage_b: str | None = Field(default=None, index=True)
 
     # Outcome
     outcome: GameOutcome
     score_a: int | None = None
     score_b: int | None = None
+    conceded: bool = False  # loser (per outcome) conceded before the game finished
 
     # Context
     game_type: GameType = Field(index=True)
