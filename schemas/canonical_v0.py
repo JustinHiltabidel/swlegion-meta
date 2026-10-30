@@ -3,17 +3,29 @@
 Every Game is the atom; everything else is metadata. Design decisions and
 rationale live in docs/schema.md — read that first if the "why" matters.
 
-Version: 0.1
+Uses SQLModel to serve two purposes at once: Pydantic validation (as DTOs)
+and SQLAlchemy ORM (as persisted tables). Every entity here is marked
+table=True and becomes a real database table.
+
+Version: 0.2
 Changelog:
+  - 0.2 (Phase 1 Session 1): Converted from pure Pydantic to SQLModel to
+        support persistence. All entities now table=True with primary keys,
+        foreign keys, and JSON columns for complex fields. Added
+        FOUNDER_HISTORICAL to DataSource for imported founder game data.
   - 0.1 (Day 2 of Phase 0): Initial draft. Six entities + two reference
         tables. ListIdentity + ListSnapshot pattern (Moxfield/Archidekt style).
-        Timestamps everywhere, source tracking, ruleset versioning.
 """
 
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from enum import Enum
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr
+from sqlalchemy import JSON, Column
+from sqlmodel import Field, SQLModel
+
+UTC = timezone.utc
+
 
 # ============================================================================
 # Enums — constrained value sets
@@ -66,6 +78,7 @@ class DataSource(str, Enum):
     TTA_OAUTH = "tta_oauth"
     LLB_OAUTH = "llb_oauth"
     OFFICIAL = "official"
+    FOUNDER_HISTORICAL = "founder_historical"  # imported by Justin from own tournament history
 
 
 class GameType(str, Enum):
@@ -93,43 +106,43 @@ class GameOutcome(str, Enum):
 # ============================================================================
 
 
-class User(BaseModel):
+class User(SQLModel, table=True):
     """An account holder in swlegion-meta."""
 
-    id: str
-    email: EmailStr
-    tier: SubscriptionTier = SubscriptionTier.FREE
-    linked_player_id: str | None = None  # who they are in-game
+    id: str = Field(primary_key=True)
+    email: EmailStr = Field(unique=True, index=True)
+    tier: SubscriptionTier = Field(default=SubscriptionTier.FREE)
+    linked_player_id: str | None = Field(default=None, foreign_key="player.id")
     created_at: datetime
 
 
-class Player(BaseModel):
+class Player(SQLModel, table=True):
     """Someone who plays games. May or may not be a User.
 
     Opponents in submitted games often exist as Players without User accounts —
     they're just names + faction until/unless they sign up.
     """
 
-    id: str
+    id: str = Field(primary_key=True)
     display_name: str
-    faction_prefs: list[Faction] = Field(default_factory=list)
+    faction_prefs: list[Faction] = Field(default_factory=list, sa_column=Column(JSON))
     region: str | None = None
-    longshanks_id: str | None = None  # nullable — future partnership integration
+    longshanks_id: str | None = Field(default=None, unique=True, index=True)
     created_at: datetime
 
 
-class Event(BaseModel):
+class Event(SQLModel, table=True):
     """Optional container for games. Casual play has no event."""
 
-    id: str
+    id: str = Field(primary_key=True)
     name: str
     date: date
     location: str | None = None
     format: str  # e.g., "1000pt Standard", "GT 800pt"
-    ruleset_version: str  # e.g., "2.6", "3.0"
-    size: int | None = None  # player count
+    ruleset_version: str
+    size: int | None = None
     source: DataSource
-    longshanks_event_id: str | None = None  # nullable — partnership integration
+    longshanks_event_id: str | None = Field(default=None, index=True)
 
 
 # ============================================================================
@@ -137,40 +150,35 @@ class Event(BaseModel):
 # ============================================================================
 
 
-class ListIdentity(BaseModel):
+class ListIdentity(SQLModel, table=True):
     """The persistent identity of a list — 'my Krennic Death Star' as a
-    continuous thing across all its versions.
+    continuous thing across all its versions."""
 
-    This is what the user names, browses in their library, and thinks of as
-    one thing even as the composition drifts. Games reference ListSnapshots
-    (below), which are linked back to an identity.
-    """
-
-    id: str
-    player_id: str
-    display_name: str  # user-chosen: "Krennic Death Star", "my main Sep list"
+    id: str = Field(primary_key=True)
+    player_id: str = Field(foreign_key="player.id", index=True)
+    display_name: str
     faction: Faction
     created_at: datetime
-    retired_at: datetime | None = None  # user marks retired (soft-delete)
+    retired_at: datetime | None = None
 
 
-class ListSnapshot(BaseModel):
+class ListSnapshot(SQLModel, table=True):
     """A specific composition at a moment in time.
 
     New snapshot created when composition changes. Games reference specific
     snapshots so the exact table state is preserved for analysis.
     """
 
-    id: str
-    identity_id: str
-    composition_json: dict  # parsed TA/LLB JSON — full unit + upgrade structure
+    id: str = Field(primary_key=True)
+    identity_id: str = Field(foreign_key="listidentity.id", index=True)
+    composition_json: dict = Field(default_factory=dict, sa_column=Column(JSON))
     points: int
-    version_hash: str  # fingerprint for dedup / same-list detection
-    source_url: str | None = None  # TA or LLB URL if imported
+    version_hash: str = Field(index=True)  # fingerprint for dedup / same-list detection
+    source_url: str | None = None
     source_platform: SourcePlatform
     ruleset_version: str
     created_at: datetime
-    is_current: bool = True  # only one snapshot per identity is "current"
+    is_current: bool = True
 
 
 # ============================================================================
@@ -178,25 +186,25 @@ class ListSnapshot(BaseModel):
 # ============================================================================
 
 
-class Game(BaseModel):
+class Game(SQLModel, table=True):
     """A match. Everything else in the schema is metadata on this."""
 
-    id: str
+    id: str = Field(primary_key=True)
 
     # Container (nullable — casual games have neither)
-    event_id: str | None = None
+    event_id: str | None = Field(default=None, foreign_key="event.id", index=True)
     round: int | None = None
 
     # Who played, with what
-    player_a_id: str
-    player_b_id: str
-    list_a_snapshot_id: str
-    list_b_snapshot_id: str
+    player_a_id: str = Field(foreign_key="player.id", index=True)
+    player_b_id: str = Field(foreign_key="player.id", index=True)
+    list_a_snapshot_id: str = Field(foreign_key="listsnapshot.id")
+    list_b_snapshot_id: str = Field(foreign_key="listsnapshot.id")
 
-    # Scenario — currently free-form strings; likely enum in v0.2
-    objective: str
-    deployment: str
-    condition: str
+    # Scenario — currently free-form strings; likely enum in v0.3
+    objective: str = Field(index=True)
+    deployment: str = Field(index=True)
+    condition: str = Field(index=True)
 
     # Outcome
     outcome: GameOutcome
@@ -204,16 +212,16 @@ class Game(BaseModel):
     score_b: int | None = None
 
     # Context
-    game_type: GameType
-    played_at: datetime  # WHEN — critical for trend analysis
-    ruleset_version: str
+    game_type: GameType = Field(index=True)
+    played_at: datetime = Field(index=True)  # WHEN — critical for trend analysis
+    ruleset_version: str = Field(index=True)
     source: DataSource
 
     # Freeform
     notes: str | None = None
 
     # Provenance
-    submitted_by_user_id: str | None = None
+    submitted_by_user_id: str | None = Field(default=None, foreign_key="user.id")
     created_at: datetime
 
 
@@ -222,26 +230,26 @@ class Game(BaseModel):
 # ============================================================================
 
 
-class Unit(BaseModel):
+class Unit(SQLModel, table=True):
     """Canonical Legion unit — for lookups and analysis.
 
     Populated from AMG official data. Versioned by ruleset so trend analysis
     doesn't blur pre/post-balance-patch data.
     """
 
-    id: str
-    name: str
-    faction: Faction
+    id: str = Field(primary_key=True)
+    name: str = Field(index=True)
+    faction: Faction = Field(index=True)
     rank: UnitRank
     base_points: int
-    ruleset_version: str
+    ruleset_version: str = Field(index=True)
 
 
-class Upgrade(BaseModel):
+class Upgrade(SQLModel, table=True):
     """Canonical Legion upgrade card. Versioned by ruleset."""
 
-    id: str
-    name: str
-    category: str  # weapon, gear, grenade, personnel, force, comms, etc.
+    id: str = Field(primary_key=True)
+    name: str = Field(index=True)
+    category: str
     points: int
-    ruleset_version: str
+    ruleset_version: str = Field(index=True)

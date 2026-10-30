@@ -220,8 +220,10 @@ __marimo__/
 # Project data - never commit raw or processed data
 data/*
 !data/.gitkeep
+!data/raw/
 data/raw/*
 !data/raw/.gitkeep
+!data/raw/personal_games_template.csv
 
 # Local environment
 .env

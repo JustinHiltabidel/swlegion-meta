@@ -118,4 +118,5 @@ The schema must be able to represent one real tournament game end-to-end. See `t
 
 ## Version history
 
+- **v0.2** · Phase 1 Session 1 — refactored from pure Pydantic `BaseModel` to `SQLModel` for persistence. Every entity is now `table=True` with primary keys, foreign keys, and JSON columns for complex fields (`list[Faction]`, `dict`). Added `FOUNDER_HISTORICAL` to `DataSource` enum for tagging imported founder game data. Design principles above remain unchanged; only the persistence layer was added.
 - **v0.1** · Day 2 of Phase 0 — initial draft. Six entities + two reference tables. ListIdentity + ListSnapshot pattern. Ready for Phase 1 refinement based on real data.

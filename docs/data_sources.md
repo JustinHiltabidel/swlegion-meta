@@ -38,6 +38,10 @@
 
 **Recommendation:** Reach out for partnership first (Group F). If granted, build sanctioned integration. If not, ship browser-extension or manual-entry patterns and lean on the prescriptive/predictive/personal-longitudinal wedges — never on trying to replicate Longshanks' descriptive analytics.
 
+**Outreach outcome (updated end of Phase 0):** Email sent via draft in `docs/longshanks_email_draft.md`. **No response received after 6+ weeks. Treating as silent no.** Proceeding with Plan B — community submissions primary, browser-extension pattern deferred to Phase 2-3.
+
+**Additional context from Longshanks' published data-export policy** (article shared by Justin, end of Phase 0): The Longshanks operator has explicitly written that the answer to data export requests is "no." Two narrow exceptions exist: (1) player-submitted lists can be copied and pasted elsewhere (game-piece data, not truly personal), and (2) round pairings can be copied as text during an event. Aggregating tournament results, win rates, or event-level statistics is against their policy — even when done manually. The article also invites collaboration on features that could live natively inside Longshanks, which is a door worth revisiting in Phase 3+ once we have a product to demonstrate. **Do not aggregate Longshanks event data as a training set for our models, manually or otherwise.**
+
 ---
 
 ### 2. Community submissions (user-uploaded data)
