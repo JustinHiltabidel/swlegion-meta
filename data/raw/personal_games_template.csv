@@ -1,2 +1,2 @@
-date,event_name,ruleset_version,round,game_type,list_name,faction,list_url,opponent_faction,primary_mission,secondary_mission,advantage,opponent_advantage,score,opponent_score,outcome,conceded,notes
-2026-03-22,Example RTT,2.6,1,tournament_rated,Han Gunline v3,rebels,https://tabletopadmiral.com/legion/list/xyz789,empire,Example Primary,Example Secondary,Example Advantage,Example Opp Advantage,8,6,win,,Example row - delete before ingesting
+date,event_name,ruleset_version,round,game_type,list_name,faction,list_url,opponent_faction,opponent_list_url,primary_mission,secondary_mission,advantage,opponent_advantage,score,opponent_score,outcome,conceded,notes
+2026-03-22,Example RTT,2.6,1,tournament_rated,Han Gunline v3,rebels,https://tabletopadmiral.com/legion/list/xyz789,empire,https://tabletopadmiral.com/legion/list/abc123,Example Primary,Example Secondary,Example Advantage,Example Opp Advantage,8,6,win,,Example row - delete before ingesting

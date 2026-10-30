@@ -114,6 +114,7 @@ CSV columns for manual entry (target: minimize typing, ~15-16 columns):
 - `faction`
 - `list_url` (optional — TA/LLB link)
 - `opponent_faction`
+- `opponent_list_url` (optional — TA/LLB link if known)
 - `primary_mission`
 - `secondary_mission`
 - `advantage` (your advantage card)
@@ -125,8 +126,8 @@ CSV columns for manual entry (target: minimize typing, ~15-16 columns):
 - `notes` (optional)
 
 **No opponent names.** Opponents are anonymized at ingest — every game is
-recorded against a single "Anonymous opponent" player. Only opponent faction
-and advantage card are kept.
+recorded against a single "Anonymous opponent" player. Only opponent faction,
+advantage card, and list link (if known) are kept.
 
 Include one example row filled in so Justin has a reference.
 

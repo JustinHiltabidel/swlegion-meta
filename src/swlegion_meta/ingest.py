@@ -59,7 +59,7 @@ REQUIRED_COLUMNS = [
     "outcome",
     "notes",
 ]
-OPTIONAL_COLUMNS = ["list_url", "conceded"]
+OPTIONAL_COLUMNS = ["list_url", "opponent_list_url", "conceded"]
 
 FACTION_ALIASES = {
     "rebel": Faction.REBELS,
@@ -109,6 +109,7 @@ class ParsedRow:
     faction: Faction
     list_url: str | None
     opponent_faction: Faction
+    opponent_list_url: str | None
     primary_mission: str
     secondary_mission: str
     advantage: str
@@ -302,6 +303,7 @@ def parse_row(row: dict[str, str], line: int) -> ParsedRow:
         list_name=list_name,
         faction=faction,
         list_url=row.get("list_url") or None,
+        opponent_list_url=row.get("opponent_list_url") or None,
         opponent_faction=opp_faction,
         primary_mission=primary_mission,
         secondary_mission=secondary_mission,
@@ -502,15 +504,17 @@ def ingest_rows(
         played_at = _played_at(r.played_on)
 
         my_identity = _identity(session, me, r.list_name, r.faction, played_at, result)
-        # Opponent lists are unknown and anonymous — one placeholder identity per
-        # faction satisfies the FKs without inventing composition.
+        # Opponents are anonymous — one placeholder identity per faction. A known
+        # opponent list URL becomes its own snapshot under that identity.
         opp_list_name = f"{r.opponent_faction.value} (list unknown)"
         opp_identity = _identity(
             session, opponent, opp_list_name, r.opponent_faction, played_at, result
         )
 
         my_snap = _snapshot(session, my_identity, r, r.list_url, default_points, result)
-        opp_snap = _snapshot(session, opp_identity, r, None, default_points, result)
+        opp_snap = _snapshot(
+            session, opp_identity, r, r.opponent_list_url, default_points, result
+        )
         touched_identities.update({my_identity.id, opp_identity.id})
 
         session.add(

@@ -52,6 +52,11 @@ def test_ingest_loads_games_players_and_lists(engine):
         assert games[0].advantage_a == "Advantage A"
         assert games[0].advantage_b == "Advantage B"
         assert games[1].advantage_b is None
+
+        # A known opponent list URL is kept as a snapshot under the anonymous player.
+        opp_snap = s.get(ListSnapshot, games[0].list_b_snapshot_id)
+        assert opp_snap.source_url.endswith("/opp1")
+        assert s.get(ListSnapshot, games[1].list_b_snapshot_id).source_url is None
         assert all(g.player_a_id == "player_justin" for g in games)
         assert all(g.source == DataSource.FOUNDER_HISTORICAL for g in games)
         assert games[3].event_id is None and games[3].round is None
@@ -104,16 +109,16 @@ def test_ingest_is_idempotent(engine):
     with get_session(engine) as s:
         assert len(s.exec(select(Game)).all()) == 4
         assert len(s.exec(select(Player)).all()) == 2
-        assert len(s.exec(select(ListSnapshot)).all()) == 5
+        assert len(s.exec(select(ListSnapshot)).all()) == 6
 
 
 def test_bad_rows_fail_loudly_and_load_nothing(engine, tmp_path):
     path = write_csv(
         tmp_path,
-        "2026-03-22,Spring RTT,2.6,1,tournament_rated,Han,rebels,,empire,P,S,A,,8,6,,,",
-        "03/22/2026,Spring RTT,2.6,2,tournament_rated,Han,rebels,,wookiees,P,S,A,,8,6,,,",
-        "2026-03-22,,2.6,3,tournament_rated,Han,rebels,,empire,P,S,A,,8,6,loss,,",
-        "2026-03-22,Spring RTT,2.6,4,tournament_rated,Han,rebels,,empire,P,S,,,8,6,tie,maybe,",
+        "2026-03-22,Spring RTT,2.6,1,tournament_rated,Han,rebels,,empire,,P,S,A,,8,6,,,",
+        "03/22/2026,Spring RTT,2.6,2,tournament_rated,Han,rebels,,wookiees,,P,S,A,,8,6,,,",
+        "2026-03-22,,2.6,3,tournament_rated,Han,rebels,,empire,,P,S,A,,8,6,loss,,",
+        "2026-03-22,Spring RTT,2.6,4,tournament_rated,Han,rebels,,empire,,P,S,,,8,6,tie,maybe,",
     )
     with pytest.raises(IngestError) as exc:
         ingest_file(path, engine, "Justin")
@@ -131,7 +136,7 @@ def test_bad_rows_fail_loudly_and_load_nothing(engine, tmp_path):
 def test_conceded_tie_rejected(tmp_path):
     path = write_csv(
         tmp_path,
-        "2026-04-05,,2.6,,casual,Han,rebels,,empire,P,S,A,,5,5,tie,yes,",
+        "2026-04-05,,2.6,,casual,Han,rebels,,empire,,P,S,A,,5,5,tie,yes,",
     )
     with pytest.raises(IngestError, match="conceded games need outcome win or loss"):
         read_csv(path)
